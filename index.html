@@ -566,7 +566,7 @@
                 setTimeout(() => {
                     changeProcent(0);
                     currentProcent=0;
-                    document.getElementById('title').textContent = `here we go again c :`;
+                    document.getElementById('title').textContent = bsodTitles[Math.floor(Math.random() * bsodTitles.length)];
                     qrcode.clear();
                     qrcode.makeCode(qrTexts[Math.floor(Math.random()*qrTexts.length)]);
                 }, 15000)
