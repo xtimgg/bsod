@@ -559,7 +559,7 @@
                 changeProcent(currentProcent);
             }
 
-            if(currentProcent==100&&Math.random()>.995) {
+            if(currentProcent==100&&Math.random()>.99) {
                 changeProcent(101);
                 currentProcent=101;
                 document.getElementById('title').textContent = `lol`;
@@ -569,7 +569,7 @@
                     document.getElementById('title').textContent = bsodTitles[Math.floor(Math.random() * bsodTitles.length)];
                     qrcode.clear();
                     qrcode.makeCode(qrTexts[Math.floor(Math.random()*qrTexts.length)]);
-                }, 15000)
+                }, 3500)
             }
         }
 
