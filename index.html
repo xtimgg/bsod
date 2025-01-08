@@ -18,7 +18,7 @@
         #b {
             background-color: #0179da;
             color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
             width: 100%;
             height: 100%;
             position: absolute;
@@ -85,6 +85,7 @@
             overflow: hidden;
             flex-direction: column;
             align-items: center;
+            font-family: sans-serif !important;
         }
 
         #settingsContent {
@@ -154,29 +155,31 @@
             box-shadow: 0 1px rgb(61, 61, 61);
         }
 
-        input[type="text"], textarea {
+        input[type="text"], textarea, input[type="number"] {
             width: calc(70% - 100px) !important;
             border-radius: 10px;
         }
         
-        input[type="text"]:hover, textarea:hover {
+        input[type="text"]:hover, textarea:hover, input[type="number"]:hover {
             transform: scale(1.02);
             background-color: #242424 !important;
         }
 
-        input[type="text"]:focus, textarea:focus {
+        input[type="text"]:focus, textarea:focus, input[type="number"]:focus {
             box-shadow: 0 2px rgb(161, 161, 161);
             background-color: #222222 !important;
             outline: 1px solid rgb(172, 172, 172);
         }
 
-        input[type="text"]:active, textarea:active {
+        input[type="text"]:active, textarea:active, input[type="number"]:active {
             transform: scale(.98);
             background-color: #292929 !important;
         }
 
         textarea {
             resize: none;
+            font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+            height: 100px !important;
         }
 
         label {
@@ -256,8 +259,12 @@
                 <input type="text" id="emoji" value=":&#40;" placeholder=":&#40;">
             </div>
             <div>
-                <label for="qrctxt" style="transform: translateY(-30px);">QR code text</label> <!-- to fix -->
-                <textarea type="text" id="qrctxt" placeholder="default"></textarea>
+                <label for="qrctxt" style="transform: translateY(-60px);">QR code text</label> <!-- to fix (im prolly not gonna fix that anyway XD) -->
+                <textarea rows="4" type="text" id="qrctxt" placeholder="default">nie masz psychy zeskanowac&#13;&#10;lol&#13;&#10;&#13;&#10;stopcode: meow</textarea>
+            </div>
+            <div>
+                <label for="pSpeed">Speed of %'s</label>
+                <input type="number" id="pSpeed" value="200" placeholder="0">
             </div>
         </div>
     </div>
@@ -422,7 +429,7 @@
             "System error: This is your fault.",
             "Please don’t panic. Oh wait, panic is allowed."
         ];
-       
+
         function handleInputWithLocalStorage(inputId, action) {
             const inputElement = document.getElementById(inputId);
 
@@ -462,7 +469,13 @@
         });
 
         handleInputWithLocalStorage("qrctxt", (value) => {
-            document.getElementById("textNextToQR").textContent = value;
+            document.getElementById("textNextToQR").innerHTML = value.replace(/\n/g, "<br>");;
+        });
+
+        handleInputWithLocalStorage("pSpeed", (value) => {
+            clearInterval(incrPr);
+            icSpeed = value; // still to fix in line 572 to make it work properly
+            setInterval(incrPr, icSpeed);
         });
         
         triggerOnKeyCombination(() => {
@@ -472,6 +485,12 @@
         triggerOnKeyCombination(() => {
             document.getElementById('e').textContent=`;3`;
         }, 'meow', 500);
+
+        triggerOnKeyCombination(() => {
+            setInterval(() => {
+                document.getElementById('b').style.backgroundColor = `hsl(${Math.floor(Math.random() * 360)}, 100%, 50%)`;
+            }, 200)
+        }, 'crazy', 500);
 
         
         var pageHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -549,7 +568,9 @@
 
         document.getElementById('qrcode').ondragstart = function() { return false; };
 
-        setInterval(incrPr, 200);
+
+        var icSpeed = 200; // need to add an if or smth later
+        setInterval(incrPr, icSpeed);
 
         let currentProcent = 0;
         function incrPr() {
@@ -591,7 +612,7 @@
                 keySequence.push(event.key);
                 lastKeyPressTime = currentTime;
 
-                if (keySequence.join('') === keyCombination) {
+                if (keySequence.join('') === keyCombination && window.location.hash !== `#settings`) {
                     targetFunction();
                     keySequence = [];
                 }
